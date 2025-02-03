@@ -1,0 +1,36 @@
+using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+
+class Program
+{
+    private static readonly HttpClient client = new HttpClient();
+
+    static async Task Main(string[] args)
+    {
+        var loginUrl = "https://dashboard.blomp.com"; // Замените на правильный URL для входа
+        var username = "seleznev.leonid05@gmail.com"; // Введите ваш логин
+        var password = "leonid259"; // Введите ваш пароль
+
+        var content = new StringContent(JsonConvert.SerializeObject(new
+        {
+            username = username,
+            password = password
+        }), Encoding.UTF8, "application/json");
+
+        var response = await client.PostAsync(loginUrl, content);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var responseData = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Успешный вход: " + responseData);
+        }
+        else
+        {
+            Console.WriteLine("Ошибка при входе: " + response.StatusCode);
+        }
+    }
+}
